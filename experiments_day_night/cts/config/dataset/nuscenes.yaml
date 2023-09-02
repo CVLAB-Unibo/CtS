@@ -1,0 +1,35 @@
+name: nuscenes
+multiple_trainloader_mode: max_size_cycle
+
+DATASET_SOURCE:
+  TRAIN: 
+    - train_day
+  preprocess_dir: "/media/data5/acardace/dataset/nuScenes_old/preprocessed_with_depth/preprocess/"
+  nuscenes_dir: "/media/data5/acardace/dataset/nuScenes_old/"  # only front cam images are needed
+
+DATASET_TARGET:
+  TRAIN: 
+    - train_night
+  VAL: 
+    - val_night
+  TEST: 
+    - test_night
+  preprocess_dir: "/media/data5/acardace/dataset/nuScenes_old/preprocessed_with_depth/preprocess/"
+  nuscenes_dir: "/media/data5/acardace/dataset/nuScenes_old/"  # only front cam images are needed
+
+seg_labels: vehicle,pedestrian,bike,traffic_boundary,background
+
+specific:
+  use_image: True
+  merge_classes: True
+  scale: 20
+  full_scale: 4096
+  resize: [400, 225]
+
+augmentations:
+  noisy_rot: 0.1
+  flip_x: 0.5
+  rot_y: 6.2831
+  transl: True
+  fliplr: 0.5
+  color_jitter: [0.4, 0.4, 0.4]

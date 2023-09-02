@@ -1,0 +1,12 @@
+type: train
+
+resume: false
+params:
+  max_iterations: 200000
+  batch_size: 8
+  checkpoint_period: 2000
+
+runtime:
+  gpus: 1
+  precision: 16
+  find_unused_parameters: False

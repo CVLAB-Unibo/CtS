@@ -1,0 +1,107 @@
+# model hyperparams
+
+models:
+  - name: 2d_net
+    args:
+      pretrained: true
+      num_classes: 5
+    optimizer:
+      name: adam
+      lr: 0.001
+    artifacts:
+      script_model: false
+    lr_scheduler:
+      name: multi_step_lr
+      milestones:
+       - 80000
+       - 90000
+      gamma: 0.1
+
+  - name: 3d_net
+    args:
+      num_classes: 5
+      backbone_3d_kwargs:
+        in_channels: 1
+        m: 16
+        block_reps: 1
+        residual_blocks: false
+        full_scale: 4096
+        num_planes: 7
+    optimizer:
+      name: adam
+      lr: 0.001
+    artifacts:
+      script_model: false
+    lr_scheduler:
+      name: multi_step_lr
+      milestones:
+       - 80000
+       - 90000
+      gamma: 0.1    
+
+
+losses:
+  - name: cross_entropy
+    weight: 1.0
+    target: segmentation
+    args:
+      weight: [2.68678412, 4.36182969, 5.47896839, 3.89026883, 1.]
+
+logging:
+  # to log on mlflow
+  # mlflow:
+  #   run_name: cts
+  #   experiment_name: crossDA_day_to_night
+  #   note: |
+  #     training with completion and densification on source only
+  #   tags:
+  #     model_name: train
+  # to log on wandb (by default it inherits some parameters from mlflow)
+  wandb:
+    run_name: cts
+    project: crossDA_day_to_night
+    tags: [train]
+
+metrics:
+  ckpt_monitor_2d: val/target/iou
+  mode_monitor: max
+  ckpt_monitor_3d: val/target/iou_3d
+  ckpt_monitor_avg: val/target/iou_avg
+
+defaults:
+- _self_
+- dataset: nuscenes
+- run: train
+
+# hydra specific config
+
+hydra:
+  output_subdir: null
+  run:
+    dir: .
+
+train:
+  # which of the following params
+  # must be logged
+  to_log:
+    - class_names
+
+  # params regarding the training
+  # procedure itself
+  params:
+    class_names:
+    - vehicle
+    - pedestrian
+    - bike
+    - traffic_boundary
+    - background
+    class_palette:
+    - [0, 0, 142]
+    - [220, 20, 60]
+    - [119, 11, 32]
+    - [220, 220, 0]
+    - [153, 153, 153]
+    val_log_images_step: 50
+    lambda_xm_src: 0.8
+    lambda_xm_trg: 0.1
+    start_densification: 40000

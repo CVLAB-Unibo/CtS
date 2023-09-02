@@ -1,0 +1,42 @@
+name: cts
+channels:
+  - pytorch
+  - conda-forge
+  - nvidia/label/cuda-11.3.0
+  - defaults
+dependencies:
+  # python version
+  - python=3.10
+
+  # cuda, toolkit for pytorch
+  # other to compile with nvcc
+  - cudatoolkit=11.3
+  - cuda-nvcc
+  - cuda-thrust
+  - cuda-runtime
+
+  # core
+  - pytorch=1.11
+  - pytorch-lightning=1.7.7
+  - torchvision
+  - albumentations
+  - kornia
+  - matplotlib
+  - pip
+
+  # dev
+  - black
+
+  - pip:
+    # core
+    - mlflow
+    - wandb
+    - pipe
+    - nuscenes-devkit
+    - pyquaternion
+    - hydra-core==1.2
+    - git+https://github.com/facebookresearch/SparseConvNet.git@dcf6a7ff540e1825ffe48ba6b2c1493ba18788b2
+    - plyfile
+    - torchmetrics==0.11.4
+    # dev
+    - pytest
