@@ -579,9 +579,6 @@ class TrainModel(pl.LightningModule):
                     color_palette_type="NuScenes",
                 )
 
-            # reinforce depth supervision
-            # data_batch_src["filtered_depth"][keep_mask_2d] = dense_depth[keep_mask_2d]
-
             self.manual_backward(seg_loss_src_3d_dense)
             seg_loss_src_3d = seg_loss_src_3d_dense
 
