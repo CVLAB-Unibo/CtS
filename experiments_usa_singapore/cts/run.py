@@ -34,6 +34,7 @@ from lib.optimizers import Optimizer
 
 code_pos = Path(__file__).parent
 
+
 @hydra.main(version_base=None, config_path=code_pos / "config", config_name="config")
 def main(cfg: DictConfig):
 
@@ -81,6 +82,9 @@ def main(cfg: DictConfig):
             batch_size=batch_size,
             test_splits=cfg.dataset.DATASET_TARGET,
         )
+
+    # if "specific" in cfg.dataset:
+    #     log_hyperparams(logger, cfg.dataset.specific, prefix="dataset")
 
     # model(s)
     module_names, model_args = [], {}
@@ -207,7 +211,6 @@ def main(cfg: DictConfig):
                             f"Error scripting model {model_cfg.name}, either disable scripting or fix the model"
                         )
                         sys.exit(1)
-
 
     lr_monitor = LearningRateMonitor(logging_interval="step")
     # train
